@@ -163,3 +163,6 @@ pip-log.txt
 
 *.backup
 dox.xml
+
+# Serena
+.serena/
