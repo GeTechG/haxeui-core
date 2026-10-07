@@ -9,3 +9,6 @@ openspec/
 tools/
 .mcp.json
 .codex/
+.claude/
+.agents/
+skills-lock.json
