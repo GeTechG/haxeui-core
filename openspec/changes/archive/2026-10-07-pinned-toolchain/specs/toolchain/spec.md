@@ -8,7 +8,7 @@
 - **THEN** `.haxe` points at the install of the new key and the install of the old key is left in place
 
 ### Requirement: One command sets up a checkout
-`tools/setup.sh` SHALL download the pinned build, verify its checksum, install it in a per-key directory of the user's cache shared by all checkouts, and point the gitignored `.haxe` symlink at it. It SHALL refuse an archive whose checksum differs from the pin, and SHALL NOT download again when the key is already installed.
+`tools/setup.sh` SHALL download the pinned build, verify its checksum, install it in a per-key directory of the user's cache shared by all checkouts, and point the gitignored `.haxe` symlink at it. It SHALL refuse an archive whose checksum differs from the pin, SHALL NOT download again when the key is already installed, SHALL refuse an install that was verified against another checksum than the pin's, and SHALL refuse to link when `.haxe` is a real directory.
 
 #### Scenario: Fresh worktree
 - **WHEN** `tools/setup.sh` is run in a new worktree
