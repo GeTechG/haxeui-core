@@ -7,6 +7,8 @@ import haxe.ui.core.Screen;
 import haxe.ui.events.UIEvent;
 import haxe.ui.focus.FocusManager;
 import haxe.ui.focus.IFocusable;
+import haxe.ui.styles.Dimension;
+import haxe.ui.styles.Value;
 import haxe.ui.styles.elements.AnimationKeyFrame;
 import haxe.ui.styles.elements.Directive;
 
