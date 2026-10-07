@@ -166,3 +166,6 @@ dox.xml
 
 # Serena
 .serena/
+
+# Pinned compiler install (tools/setup.sh)
+.haxe
