@@ -85,7 +85,7 @@ fi
 # lookup silently returns only part of the call sites. `--macro include(...)` fails in display mode.
 # Left out, because they do not type as modules of a normal build: the macro package (macro context only)
 # and whatever $EXCLUDE names.
-EXCLUDE='^haxe\.ui\.(macros\.|focus\.BoxFocusApplicator$)'
+EXCLUDE='^haxe\.ui\.macros\.'
 DISPLAY_HXML=.serena/display.hxml
 mkdir -p "$ROOT/.serena"
 {
