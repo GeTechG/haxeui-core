@@ -24,12 +24,19 @@ The maintainer decides architecture and end-user behaviour, nothing else — ste
 - An upstream PR is a cherry-pick of one task's code commits; keep them self-contained.
 - Changing the list of infrastructure paths is an infrastructure commit.
 
+## Toolchain
+`tools/setup.sh` — run once in every checkout or worktree, and again after adding or removing source files. It installs the pinned compiler and wires Serena; both installs are shared per user under `~/.cache`, so a second checkout only links them.
+
+- **Compiler.** Build, type and run tests only with the pinned compiler: `.haxe/haxe` with `HAXE_STD_PATH=.haxe/std`. Never use a system Haxe 4.x. The pin is `tools/haxe-build.pin` — one line, `<build key> <sha256 of the archive>`, naming a build of the Haxe 5 fork `GeTechG/haxe`; changing the compiler is a one-commit change of that file.
+- **Typing check.** `HAXE_STD_PATH=.haxe/std .haxe/haxe .serena/display.hxml --no-output` types every module of the library against the do-nothing backend in `tools/display-backend` (the `haxeui-blank` template) and must exit 0. The config is generated: it names every module, except the macro package and the modules `EXCLUDE` in `tools/setup.sh` lists as not typing on their own.
+- **Serena** (symbol navigation; `.mcp.json` for Claude Code, `.codex/config.toml` for Codex) runs a language server built from source against the same compiler and config; restart it after `tools/setup.sh`. Its reference lists are **not exhaustive**: code behind a conditional the config does not define (`#if format`, a backend's defines), the excluded modules, and anything at all while a listed module fails to type are missing from them. Before a rename or a removal, compare with a text search.
+
 ## Checks
 Run before pushing:
 - `bash .github/scripts/check-commit-kinds-test.sh` — self-test of the commit-kind check.
 - `bash .github/scripts/check-commit-kinds.sh origin/master..HEAD` — the check on your branch.
 
-The library has no test suite or standalone build of its own (it compiles only with a backend); a code change is verified by compiling a backend against it, e.g. the `build` job of `GeTechG/haxeui-heaps`.
+The library has no test suite or standalone build of its own (it compiles only with a backend); a code change passes the typing check (see *Toolchain*) and is verified by compiling a backend against it, e.g. the `build` job of `GeTechG/haxeui-heaps`.
 
 ## Specs
 `openspec/` holds this fork's own specs (`openspec/specs/`). Behaviour or rule changes go through `openspec/changes/`.
