@@ -40,12 +40,19 @@ if [ ! -x "$HAXE_DIR/haxe" ]; then
     echo "setup: refusing $ASSET: sha256 $GOT, tools/haxe-build.pin says $WANT" >&2; exit 1; }
   tar -xzf "$TMP.tar.gz" -C "$TMP"
   [ -x "$TMP/haxe" ] && [ -d "$TMP/std" ] || { echo "setup: $ASSET holds no haxe + std/" >&2; exit 1; }
+  echo "$WANT" > "$TMP/.sha256"
   chmod 755 "$TMP"
   mv -T "$TMP" "$HAXE_DIR"
   rm -f "$TMP.tar.gz"
 fi
+# The install records the checksum it was verified against: a pin whose checksum changed under the same key
+# must not silently keep the old build.
+[ "$(cat "$HAXE_DIR/.sha256" 2> /dev/null)" = "$WANT" ] || {
+  echo "setup: $HAXE_DIR was not installed from the archive tools/haxe-build.pin names; remove it and re-run" >&2
+  exit 1; }
 flock -u 9
-ln -sfn "$HAXE_DIR" "$ROOT/.haxe"
+# -T: a real `.haxe` directory is an error, not a place to drop the link into.
+ln -sfnT "$HAXE_DIR" "$ROOT/.haxe"
 echo "setup: $("$ROOT/.haxe/haxe" --version) -> .haxe"
 
 # --- language server --------------------------------------------------------------------------------------
