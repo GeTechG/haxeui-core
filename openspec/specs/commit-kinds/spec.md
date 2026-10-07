@@ -18,3 +18,11 @@ Infrastructure is the set of paths listed in `.github/infra-paths` (paths absent
 
 ### Requirement: The check proves itself
 `.github/scripts/check-commit-kinds-test.sh` SHALL build a throwaway repository with a mixed commit and fail unless the check rejects it; CI runs it before the real check.
+
+#### Scenario: Check that accepts a mixed commit
+- **WHEN** `check-commit-kinds.sh` exits 0 on the throwaway repository's mixed commit
+- **THEN** the self-test prints `FAIL: mixed commit accepted` and exits non-zero
+
+#### Scenario: Working check
+- **WHEN** the check passes the throwaway repository's code-only and infrastructure-only commits and rejects its mixed commit
+- **THEN** the self-test prints `ok` and exits 0
