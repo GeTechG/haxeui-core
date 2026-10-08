@@ -1,0 +1,6 @@
+# ast-grep on the library's Haxe sources: search and rewrite by code shape (see AGENTS.md, Toolchain).
+# tools/setup.sh installs the pinned ast-grep and builds the grammar library behind the gitignored .ast-grep/.
+customLanguages:
+  haxe:
+    libraryPath: .ast-grep/haxe.so
+    extensions: [hx]
