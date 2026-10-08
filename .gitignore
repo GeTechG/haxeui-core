@@ -169,3 +169,6 @@ dox.xml
 
 # Pinned compiler install (tools/setup.sh)
 .haxe
+
+# Pinned ast-grep and Haxe grammar links (tools/setup.sh)
+.ast-grep/
