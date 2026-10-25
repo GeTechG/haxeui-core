@@ -95,7 +95,7 @@ class Parser {
                 keyframe.directives = parseDirectives(directives);
                 keyframes.push(keyframe);
 
-                return null;
+                return "";
             });
 
             var animation = new AnimationKeyFrames(id, keyframes);
@@ -137,7 +137,7 @@ class Parser {
                 }
             }
 
-            return null;
+            return "";
         });
 
         return styleSheet;
