@@ -641,6 +641,7 @@ private class SelectedBehaviour extends DataBehaviour {
 // Events
 //***********************************************************************************************************
 @:dox(hide) @:noCompletion
+@:access(haxe.ui.backend.ComponentBase)
 class ButtonEvents extends haxe.ui.events.Events {
     private var _button:Button;
     private var _down:Bool = false;
@@ -756,7 +757,7 @@ class ButtonEvents extends haxe.ui.events.Events {
 
         _button.removeClass(":down", true, recursiveStyling);
         var over = _button.hitTest(event.screenX, event.screenY);
-        if (event.touchEvent == false && over == true) {
+        if (event.touchEvent == false && over == true && _button._interactivityDisabled == false) {
             _button.addClass(":hover", true, recursiveStyling);
         } else if (over == false) {
             _button.removeClass(":hover", true, recursiveStyling);
@@ -770,7 +771,7 @@ class ButtonEvents extends haxe.ui.events.Events {
 
     private function onMove(event:UIEvent) {
         var over = _button.hitTest(Screen.instance.currentMouseX, Screen.instance.currentMouseY);
-        if (over == true) {
+        if (over == true && _button._interactivityDisabled == false) {
             _button.addClass(":hover", true, recursiveStyling);
         } else if (over == false) {
             _button.removeClass(":hover", true, recursiveStyling);
