@@ -119,6 +119,28 @@ class InteractiveComponent extends Component implements IFocusable implements IV
     }
 
     //***********************************************************************************************************
+    // Interface accessors
+    //***********************************************************************************************************
+
+    // `disabled` and `value` are declared in ComponentBase, but IFocusable and IValueComponent are only
+    // implemented here: the eval target (--interp) fails at startup ("Field index for get_disabled not found
+    // on prototype") when an interface's accessors are all inherited, so they are redeclared on this class
+
+    private override function get_disabled():Bool {
+        return super.get_disabled();
+    }
+    private override function set_disabled(value:Bool):Bool {
+        return super.set_disabled(value);
+    }
+
+    private override function get_value():Dynamic {
+        return super.get_value();
+    }
+    private override function set_value(value:Dynamic):Dynamic {
+        return super.set_value(value);
+    }
+
+    //***********************************************************************************************************
     // Internal
     //***********************************************************************************************************
 
