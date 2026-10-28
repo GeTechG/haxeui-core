@@ -34,3 +34,7 @@ A `TextField`'s content SHALL be whichever of `text` and `htmlText` was set last
 #### Scenario: Clone
 - **WHEN** a text field with placeholder `"Name"` has its `htmlText` set to `"X"`, then its `text` set to `"Hi"`, and is cloned
 - **THEN** the clone shows `"Hi"` as text, not `"X"` as html
+
+#### Scenario: Content reduced to nothing
+- **WHEN** an unfocused text field with placeholder `"123"` and `restrictChars` `"0-9"` has its `htmlText` set to `"abc"` and then its `placeholder` set to `"456"`
+- **THEN** it has `:empty`, shows `"456"`, and its `htmlText` is `""`
