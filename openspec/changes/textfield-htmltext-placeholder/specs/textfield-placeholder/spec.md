@@ -30,3 +30,7 @@ A `TextField`'s content SHALL be whichever of `text` and `htmlText` was set last
 #### Scenario: Text set after html text
 - **WHEN** an unfocused text field with placeholder `"Name"` has its `htmlText` set to `"Hello"` and then its `text` set to `"Hi"`
 - **THEN** it does not have `:empty` and its text input's `text` is `"Hi"`
+
+#### Scenario: Clone
+- **WHEN** a text field with placeholder `"Name"` has its `htmlText` set to `"X"`, then its `text` set to `"Hi"`, and is cloned
+- **THEN** the clone shows `"Hi"` as text, not `"X"` as html
