@@ -354,7 +354,7 @@ private class TextFieldHelper {
                     text = textfield.placeholder;
                     textfield.password = false;
                     textfield.addClass(":empty");
-                } else if (text != textfield.placeholder) {
+                } else {
                     textfield.password = password;
                     textfield.removeClass(":empty");
                 }
@@ -364,10 +364,7 @@ private class TextFieldHelper {
             }
         } else {
             textfield.password = password;
-
-            if (placeholderVisible == true) {
-                textfield.removeClass(":empty");
-            }
+            textfield.removeClass(":empty");
         }
 
         textfield.getTextInput().text = '${text}';
@@ -397,7 +394,7 @@ private class TextFieldHelper {
                     htmlText = textfield.placeholder;
                     textfield.password = false;
                     textfield.addClass(":empty");
-                } else if (htmlText != textfield.placeholder) {
+                } else {
                     textfield.password = password;
                     textfield.removeClass(":empty");
                 }
@@ -407,10 +404,7 @@ private class TextFieldHelper {
             }
         } else {
             textfield.password = password;
-
-            if (placeholderVisible == true) {
-                textfield.removeClass(":empty");
-            }
+            textfield.removeClass(":empty");
         }
 
         textfield.getTextInput().htmlText = '${htmlText}';
