@@ -279,7 +279,7 @@ private class TextBehaviour extends DataBehaviour {
         TextFieldHelper.validateText(textfield, _value);
 
         if (_value != null && _value != "") {
-            _value = textfield.getTextInput().text;
+            _value = textfield.hasClass(":empty") ? "" : textfield.getTextInput().text; // the placeholder is not the value
         }
     }
 }
@@ -307,7 +307,7 @@ private class HtmlTextBehaviour extends DataBehaviour {
         TextFieldHelper.validateHtmlText(textfield, _value);
 
         if (_value != null && _value != "") {
-            _value = textfield.getTextInput().htmlText;
+            _value = textfield.hasClass(":empty") ? "" : textfield.getTextInput().htmlText; // the placeholder is not the value
         }
     }
 }
