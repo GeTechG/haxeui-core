@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: `:empty` follows the text, not the displayed string
-A `TextField` SHALL show its placeholder and carry `:empty` exactly when it has a placeholder, is not focused, and its text (`text`, or `htmlText` when that was set) is empty after `maxChars` and `restrictChars` are applied. In every other case it SHALL show its text and SHALL NOT carry `:empty`, whatever that text is — including a text equal to the placeholder. While the placeholder is shown the field is not in password mode; otherwise its `password` setting applies.
+A `TextField` SHALL show its placeholder and carry `:empty` exactly when it has a placeholder, is not focused, and its `text` is empty after `maxChars` and `restrictChars` are applied. In every other case it SHALL show its text and SHALL NOT carry `:empty`, whatever that text is — including a text equal to the placeholder. While the placeholder is shown the field is not in password mode; otherwise its `password` setting applies.
 
 #### Scenario: Text equal to the placeholder
 - **WHEN** an unfocused text field with placeholder `"Name"` and an empty text has its `text` set to `"Name"`

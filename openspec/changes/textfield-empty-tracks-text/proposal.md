@@ -4,7 +4,7 @@
 ## What Changes
 - Without focus and with a placeholder, a non-empty text removes `:empty` and restores the password mode, whatever its value.
 - With no placeholder, `:empty` is removed whatever the text.
-- The same for `htmlText`.
+- `validateHtmlText` gets the same two changes. What a field shows after `htmlText` is set with a placeholder is not covered here: `TextBehaviour` validates again with the empty `text` afterwards and puts the placeholder back, a separate defect.
 
 ## Capabilities
 
