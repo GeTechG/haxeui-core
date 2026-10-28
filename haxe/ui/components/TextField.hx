@@ -97,6 +97,16 @@ class TextField extends InteractiveComponent implements ICompositeInteractiveCom
         }
         return StringTools.trim(text).length == 0;
     }
+
+    private override function postCloneComponent(c:Component) {
+        super.postCloneComponent(c);
+        var textfield:TextField = cast(c, TextField);
+        if (TextFieldHelper.htmlTextBehaviour(this).isContent == true) {
+            textfield.htmlText = htmlText;
+        } else {
+            textfield.text = text;
+        }
+    }
 }
 
 //***********************************************************************************************************
@@ -289,13 +299,6 @@ private class HtmlTextBehaviour extends DataBehaviour {
         super.set(value);
     }
 
-    public function syncWithInput() {
-        var htmlText = cast(_component, TextField).getTextInput().htmlText;
-        if (htmlText != null) {
-            _value = htmlText;
-        }
-    }
-
     public override function validateData() {
         if (isContent == false) {
             return;
@@ -417,6 +420,9 @@ private class TextFieldHelper {
             textfield.removeClass(":empty");
         }
 
+        if (textfield.getTextInput().htmlText != null) {
+            textfield.getTextInput().htmlText = null; // clears the input's text as well
+        }
         textfield.getTextInput().text = '${text}';
         textfield.invalidateComponentLayout();
     }
@@ -457,6 +463,9 @@ private class TextFieldHelper {
             textfield.removeClass(":empty");
         }
 
+        if (textfield.getTextInput().text != null) {
+            textfield.getTextInput().htmlText = null; // so that setting the same html text again still clears the input's text
+        }
         textfield.getTextInput().htmlText = '${htmlText}';
         textfield.invalidateComponentLayout();
     }
@@ -479,9 +488,10 @@ private class Events extends haxe.ui.events.Events {
             _textfield.getTextInput().multiline = false;
             _textfield.getTextInput().data.onChangedCallback = function() {
                 if (_textfield.hasClass(":empty") == false) {
-                    var htmlTextBehaviour = TextFieldHelper.htmlTextBehaviour(_textfield);
-                    if (htmlTextBehaviour.isContent == true) {
-                        htmlTextBehaviour.syncWithInput();
+                    if (TextFieldHelper.htmlTextBehaviour(_textfield).isContent == true) {
+                        if (_textfield.getTextInput().htmlText != null) {
+                            _textfield.htmlText = _textfield.getTextInput().htmlText;
+                        }
                     } else {
                         _textfield.text = _textfield.getTextInput().text;
                     }
