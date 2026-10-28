@@ -205,7 +205,7 @@ private class PasswordBehaviour extends DataBehaviour {
 private class MaxCharsBehaviour extends DataBehaviour {
     public override function validateData() {
         var textfield:TextField = cast(_component, TextField);
-        TextFieldHelper.validateText(textfield, textfield.text);
+        TextFieldHelper.validate(textfield);
     }
 }
 
@@ -235,7 +235,7 @@ private class RestrictCharsBehaviour extends DataBehaviour {
         regexp = new EReg ('(${testRegexpParts.join(' | ')})', 'g');
 
         var textfield:TextField = cast(_component, TextField);
-        TextFieldHelper.validateText(textfield, textfield.text);
+        TextFieldHelper.validate(textfield);
     }
 }
 
@@ -243,14 +243,29 @@ private class RestrictCharsBehaviour extends DataBehaviour {
 private class PlaceholderBehaviour extends DataBehaviour {
     public override function validateData() {
         var textfield:TextField = cast(_component, TextField);
-        TextFieldHelper.validateText(textfield, textfield.text);
+        TextFieldHelper.validate(textfield);
     }
 }
 
 @:dox(hide) @:noCompletion
 private class TextBehaviour extends DataBehaviour {
+    public override function set(value:Variant) {
+        var htmlTextBehaviour = TextFieldHelper.htmlTextBehaviour(cast(_component, TextField));
+        if (htmlTextBehaviour.isContent == true) {
+            htmlTextBehaviour.isContent = false;
+            if (value == get()) {
+                invalidateData();
+                return;
+            }
+        }
+        super.set(value);
+    }
+
     public override function validateData() {
         var textfield:TextField = cast(_component, TextField);
+        if (TextFieldHelper.htmlTextBehaviour(textfield).isContent == true) {
+            return;
+        }
         TextFieldHelper.validateText(textfield, _value);
 
         if (_value != null && _value != "") {
@@ -261,7 +276,30 @@ private class TextBehaviour extends DataBehaviour {
 
 @:dox(hide) @:noCompletion
 private class HtmlTextBehaviour extends DataBehaviour {
+    public var isContent:Bool = false; // whether htmlText, rather than text, was set last and is what the field shows
+
+    public override function set(value:Variant) {
+        if (isContent == false) {
+            isContent = true;
+            if (value == get()) {
+                invalidateData();
+                return;
+            }
+        }
+        super.set(value);
+    }
+
+    public function syncWithInput() {
+        var htmlText = cast(_component, TextField).getTextInput().htmlText;
+        if (htmlText != null) {
+            _value = htmlText;
+        }
+    }
+
     public override function validateData() {
+        if (isContent == false) {
+            return;
+        }
         var textfield:TextField = cast(_component, TextField);
         TextFieldHelper.validateHtmlText(textfield, _value);
 
@@ -331,6 +369,18 @@ private class SelectionEndIndexBehaviour extends ValueBehaviour {
 //***********************************************************************************************************
 @:access(haxe.ui.core.Component)
 private class TextFieldHelper {
+    public static function htmlTextBehaviour(textfield:TextField):HtmlTextBehaviour {
+        return cast(textfield.behaviours.find("htmlText"), HtmlTextBehaviour);
+    }
+
+    public static function validate(textfield:TextField) {
+        if (htmlTextBehaviour(textfield).isContent == true) {
+            validateHtmlText(textfield, textfield.htmlText);
+        } else {
+            validateText(textfield, textfield.text);
+        }
+    }
+
     public static function validateText(textfield:TextField, text:String) {
         if (text == null) {
             text = "";
@@ -429,7 +479,12 @@ private class Events extends haxe.ui.events.Events {
             _textfield.getTextInput().multiline = false;
             _textfield.getTextInput().data.onChangedCallback = function() {
                 if (_textfield.hasClass(":empty") == false) {
-                    _textfield.text = _textfield.getTextInput().text;
+                    var htmlTextBehaviour = TextFieldHelper.htmlTextBehaviour(_textfield);
+                    if (htmlTextBehaviour.isContent == true) {
+                        htmlTextBehaviour.syncWithInput();
+                    } else {
+                        _textfield.text = _textfield.getTextInput().text;
+                    }
                     _textfield.dispatch(new UIEvent(UIEvent.CHANGE));
                 }
             };
@@ -460,7 +515,7 @@ private class Events extends haxe.ui.events.Events {
         } else {
             _textfield.getTextInput().blur();
         }
-        TextFieldHelper.validateText(_textfield, _textfield.text);
+        TextFieldHelper.validate(_textfield);
     }
 
     private function onKeyUp(event:KeyboardEvent) { 
