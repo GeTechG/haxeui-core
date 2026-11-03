@@ -49,7 +49,7 @@ The generated display config SHALL hold only class paths, defines and module nam
 - **THEN** the language server does not report it and the text search does
 
 ### Requirement: Structural search works on the Haxe sources
-The setup command SHALL download the `ast-grep` binary at a fixed version, refuse an archive whose sha256 differs from the one it pins, and build the Haxe grammar `GeTechG/tree-sitter-haxe` at a fixed commit, each into a per-pin directory of the user's cache shared by all checkouts, and link them as `.ast-grep/ast-grep` and `.ast-grep/haxe.so` in the gitignored `.ast-grep/` directory. `sgconfig.yml` at the repository root SHALL register that library as the custom language `haxe` for the extension `hx`. The command SHALL NOT install or build again what the cache already holds for the pin. It SHALL fail when the linked binary does not match a Haxe sample through `sgconfig.yml`. `AGENTS.md` SHALL say when to use `ast-grep`, when Serena and when a text search.
+The setup command SHALL install the `ast-grep` binary at a fixed version and the Haxe grammar `GeTechG/tree-sitter-haxe` built at a fixed commit, each into a per-pin directory of the user's cache shared by all checkouts, and link them as `.ast-grep/ast-grep` and `.ast-grep/haxe.so` in the gitignored `.ast-grep/` directory. It SHALL NOT install or build again what the cache already holds for the pin.
 
 #### Scenario: Fresh worktree
 - **WHEN** `tools/setup.sh` is run in a new worktree
@@ -66,3 +66,24 @@ The setup command SHALL download the `ast-grep` binary at a fixed version, refus
 #### Scenario: Broken install in the cache
 - **WHEN** the cached binary or grammar library cannot run a Haxe query
 - **THEN** the command fails instead of reporting the link
+
+### Requirement: The structural search install is verified
+The setup command SHALL refuse an `ast-grep` archive whose sha256 differs from the one it pins, and SHALL fail when the linked binary does not match a Haxe sample through `sgconfig.yml`.
+
+#### Scenario: Grammar that does not load
+- **WHEN** `.ast-grep/haxe.so` links to a library that `ast-grep` cannot load as the `haxe` language
+- **THEN** the setup command fails
+
+### Requirement: The Haxe grammar is registered for ast-grep
+`sgconfig.yml` at the repository root SHALL register `.ast-grep/haxe.so` as the custom language `haxe` for the extension `hx`.
+
+#### Scenario: Query from the repository root
+- **WHEN** `.ast-grep/ast-grep run -p 'throw new $T($$$A)' -l haxe haxe` is run from the repository root after the setup command
+- **THEN** it parses the `.hx` files with the Haxe grammar and lists the matching `throw` expressions
+
+### Requirement: AGENTS.md says which search to use
+`AGENTS.md` SHALL say when to use `ast-grep`, when Serena and when a text search.
+
+#### Scenario: Question about the shape of code
+- **WHEN** an agent needs every call of a given form, which no symbol or string names
+- **THEN** `AGENTS.md` directs it to `ast-grep`
