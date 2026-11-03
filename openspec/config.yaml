@@ -4,3 +4,35 @@ context: |
   haxeui-core: the core library of the HaxeUI framework, maintained as an independent fork. Its own
   rules live in AGENTS.md; its own specs live in openspec/specs. Consumers pin it by commit.
   Every commit is either code or infrastructure, never both (see openspec/specs/commit-kinds).
+
+# Per-artifact rules — injected only when that artifact is created.
+rules:
+  specs:
+    - A requirement's text is at most 500 characters and states one behaviour with SHALL or MUST; details,
+      examples and edge cases go into its scenarios, a second behaviour into its own requirement.
+    - Scenarios are `####` headings with WHEN / THEN bullets; every requirement has at least one.
+    - A spec states only observable behaviour, not how the code achieves it.
+    - A MODIFIED requirement copies the whole requirement, with every scenario, and then edits it.
+      To split an over-long one, keep it under MODIFIED with its header and every scenario, cut its text
+      to one behaviour, and ADD each behaviour cut out as its own requirement with its own scenarios.
+    - A REMOVED requirement carries a `**Reason**` and a `**Migration**`.
+    - A new capability's Purpose is at least 50 characters and never the `TBD` placeholder.
+  tasks:
+    - Every task group carries its own tests and documentation; every task names how it is checked
+      (the typing check, a script under `--interp`, `openspec/check.sh`, a backend build).
+    - Steps after the tasks are done (a hand-over, a bump in a consumer) go under `## Workflow follow-up`
+      as plain bullets, not checkboxes.
+    - A step only a human can do is written `- [ ] N.M [human] …` and stays a checkbox; agents never tick it.
+
+# Per-operation guidance — injected only into apply / archive. It points at AGENTS.md; it does not restate it.
+operations:
+  apply:
+    guidance:
+      - Follow steps 2 and 3 of the issue workflow in AGENTS.md ("Workflow"), and its "Commits" rules —
+        code and infrastructure never share a commit.
+      - Run the checks listed under "Checks" in AGENTS.md before pushing.
+  archive:
+    guidance:
+      - Archive as step 3 of the issue workflow in AGENTS.md says — the sync and archive are the last
+        commit of the change's branch.
+      - Unticked `[human]` tasks are handled by step 4 of that workflow, not by archiving.

@@ -24,3 +24,14 @@ jobs:
             range="${{ github.sha }}^..${{ github.sha }}"
           fi
           bash .github/scripts/check-commit-kinds.sh "$range"
+
+  openspec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: OpenSpec specs, changes and skills (openspec/specs/openspec-tooling)
+        run: |
+          OPENSPEC="npm exec --yes --package=@fission-ai/openspec@$(cat openspec/cli.pin) -- openspec" bash openspec/check.sh
